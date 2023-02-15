@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{% static 'home.css' %}">
+  </head>
+  <body>
+    <h1>Easy Chat</h1>
+
+    {% if user.is_authenticated %}
+    <p>こんにちは{{ user.username }}さん、Chatをはじめましょう</p>
+    <p><a href="{% url 'index' %}">チャットへ</a></p>
+    <p><a href="{% url 'logout' %}">ログアウト</a></p>
+    {% else %}
+    <p>ログインしてください。まだユーザーでない方はユーザー登録をしてログインしてください。</p>
+    <p><a href="{% url 'login' %}">ログイン</a></p>
+    <p><a href="{% url 'user_create' %}">登録</a></p>
+    {% endif %}
+</body>
+</html>

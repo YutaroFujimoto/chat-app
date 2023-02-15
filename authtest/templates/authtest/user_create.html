@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザーフォーム</title>
+    <link rel="stylesheet" href="{% static 'user_create.css' %}">
+</head>
+
+<body>
+    <div>
+        <form method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" onclick="location.href='{% url 'home' %}'" value="登録">
+        </form>
+    </div>
+</body>
+</html>

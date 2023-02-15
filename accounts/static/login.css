@@ -1,0 +1,17 @@
+html {
+    background-color: #ffffff;
+ }
+
+body {
+    background-color: #87cefa;
+    margin: 140px 200px;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+p {
+    text-align: center;
+}

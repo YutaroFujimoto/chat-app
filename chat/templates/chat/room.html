@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<!-- chat/templates/chat/room.html -->
+<html lang="ja">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="{% static 'room.css' %}">
+    <title>Chat Room</title>
+</head>
+<body>
+    <h3>Room Name {{ room_name_json }}</h3>
+    <p>あなたは<span id="username">{{ user.username }}</span>として参加しています</p>
+    <p><textarea id="chat-log"></textarea></p>
+    <p><input id="chat-message-input" type="text"/><input id="chat-message-submit" type="button" value="送る"/></p>
+    <p><input type="button" onclick="history.back()" value="退室"></p>
+</body>
+<script>
+    var username = document.getElementById("username");
+    var roomName = {{ room_name_json }};
+    var chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/' + roomName + '/');
+    chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data); var message = data['message']; var print_username = data['username']; var today = new Date();
+        document.querySelector('#chat-log').value += ('[' + print_username + ']' + message + '　' + today.getFullYear() + '/' + today.getMonth()+1 + '/' + today.getDate() + '/' + today.getHours() + ':' + ('00' + today.getMinutes()).slice(-2) + '\n');
+    };
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+        var messageInputDom = document.querySelector('#chat-message-input');
+        var message = messageInputDom.value; var name = username.textContent;
+        chatSocket.send(JSON.stringify({'message': message, 'username': name}));
+        messageInputDom.value = '';
+    };
+</script>
+</html>
